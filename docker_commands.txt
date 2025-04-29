@@ -1,0 +1,7 @@
+--create docker image
+
+docker build --build-arg JAR_FILE=target/*.jar -t linkycat/urlshortener-api .
+
+--create/run container from docker image
+
+docker run --name lc-urlshortener-api -p 1001:1001 linkycat/urlshortener-api -d
