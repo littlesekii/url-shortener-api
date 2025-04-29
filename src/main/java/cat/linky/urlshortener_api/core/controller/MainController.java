@@ -1,37 +1,38 @@
 package cat.linky.urlshortener_api.core.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import java.net.URI;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import cat.linky.urlshortener_api.core.util.Utils;
+import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
+import cat.linky.urlshortener_api.core.service.UrlRefService;
 
 
 @RestController
 @RequestMapping("/short")
 public class MainController {
+
+    private UrlRefService service;
+
+    public MainController(UrlRefService service) {
+        this.service = service;
+    }
     
-    @GetMapping
-    public String get() {
-        StringBuilder res = new StringBuilder();
+    @PostMapping
+    public ResponseEntity<UrlRefDTO> post(@RequestBody UrlRefDTO req) {
+        UrlRefDTO res = service.create(req);
 
-        int ranges[][] = {
-            {48, 57}, // '0 to '9' char
-            {65, 90}, // 'A' to 'Z' char
-            {97, 122} // 'a' to 'z' char
-        };
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(res.id())
+            .toUri();
 
-        for(int i = 0; i < 5; i++)
-        {
-            int randomRangeIndex = Utils.randomInt(0, 2);
-            int range[] = ranges[randomRangeIndex];
-
-            int randomCharInt = Utils.randomInt(range[0], range[1]);
-
-            res.append((char)randomCharInt);
-        }
-        
-        return "sh.linky.cat/" + res.toString();
+        return ResponseEntity.created(uri).body(res);
     }
     
 }
