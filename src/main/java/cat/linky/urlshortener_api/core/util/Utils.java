@@ -6,7 +6,6 @@ public class Utils {
     {
         int number = (int) (Math.random() * (1 + endRange - startRange));
         number += startRange;
-
         return number;
     }
 }
