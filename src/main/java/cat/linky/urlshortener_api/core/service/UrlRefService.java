@@ -1,7 +1,6 @@
 package cat.linky.urlshortener_api.core.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
