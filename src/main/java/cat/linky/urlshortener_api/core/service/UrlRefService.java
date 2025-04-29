@@ -16,10 +16,28 @@ public class UrlRefService {
     }
 
     public UrlRefDTO create(UrlRefDTO data) {
-        UrlRefDTO result;
+        UrlRefDTO result = null;
 
-        StringBuilder dinamicUrl = new StringBuilder();
-        dinamicUrl.append("http://localhost:1001/");
+        String urlRef;
+        //prevent duplicate url refs
+        do {
+            urlRef = createDynamicUrl("http://localhost:1001/");
+            // System.out.println(repository.findByUrlRef(urlRef));
+        } while (repository.findByUrlRef(urlRef) != null);
+        
+
+        var entity = data.toEntity();
+        entity.setUrlRef(urlRef.toString());
+
+        var created = repository.save(entity);
+        result = UrlRefDTO.fromEntity(created);
+        
+        return result;
+    }
+
+    private String createDynamicUrl(String baseUrl) {
+        StringBuilder result = new StringBuilder();
+        result.append(baseUrl);
 
         int ranges[][] = {
             {48, 57}, // '0 to '9' char
@@ -33,15 +51,9 @@ public class UrlRefService {
             int range[] = ranges[randomRangeIndex];
 
             int randomCharInt = Utils.randomInt(range[0], range[1]);
-            dinamicUrl.append((char)randomCharInt);
+            result.append((char)randomCharInt);
         }
 
-        var entity = data.toEntity();
-        entity.setUrlRef(dinamicUrl.toString());
-
-        var created = repository.save(entity);
-        result = UrlRefDTO.fromEntity(created);
-        
-        return result;
+        return result.toString();
     }
 }

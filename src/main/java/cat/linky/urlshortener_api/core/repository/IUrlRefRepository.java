@@ -7,5 +7,5 @@ import cat.linky.urlshortener_api.core.model.UrlRef;
 
 @Repository
 public interface IUrlRefRepository extends JpaRepository<UrlRef, Long> {
-    
+    UrlRef findByUrlRef(String urlRef);
 }
