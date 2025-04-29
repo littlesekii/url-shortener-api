@@ -1,5 +1,7 @@
 package cat.linky.urlshortener_api.core.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
@@ -9,6 +11,9 @@ import cat.linky.urlshortener_api.core.util.Utils;
 @Service
 public class UrlRefService {
     
+    @Value("${server.baseurl}")
+    private String BASE_URL;
+
     private IUrlRefRepository repository;
 
     public UrlRefService(IUrlRefRepository repository) {
@@ -16,12 +21,12 @@ public class UrlRefService {
     }
 
     public UrlRefDTO create(UrlRefDTO data) {
-        UrlRefDTO result = null;
+        UrlRefDTO result;
 
         String urlRef;
         //prevent duplicate url refs
         do {
-            urlRef = createDynamicUrl("http://localhost:1001/");
+            urlRef = createDynamicUrl(BASE_URL);
             // System.out.println(repository.findByUrlRef(urlRef));
         } while (repository.findByUrlRef(urlRef) != null);
         
@@ -32,6 +37,18 @@ public class UrlRefService {
         var created = repository.save(entity);
         result = UrlRefDTO.fromEntity(created);
         
+        return result;
+    }
+
+    public UrlRefDTO findByUrlRef(String urlRef) {
+        UrlRefDTO result;        
+
+        var entity = repository.findByUrlRef(BASE_URL + urlRef);
+        if (entity == null) {
+            return null;
+        }
+
+        result = UrlRefDTO.fromEntity(entity);
         return result;
     }
 
