@@ -44,7 +44,7 @@ public class UrlRefService {
 
         var entity = repository.findByUrlRef(BASE_URL + urlRef);
         if (entity == null) {
-            return null;
+            return new UrlRefDTO(null, "", "");
         }
 
         result = UrlRefDTO.fromEntity(entity);
