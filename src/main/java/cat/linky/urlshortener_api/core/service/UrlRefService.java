@@ -44,7 +44,11 @@ public class UrlRefService {
 
         var entity = repository.findByUrlRef(BASE_URL + urlRef);
         if (entity == null) {
+<<<<<<< HEAD
             return new UrlRefDTO(null, "", "https://sh.linky.cat");
+=======
+            return new UrlRefDTO(null, "", "");
+>>>>>>> 01ba0f5bc796b4f6a9acd9ac3bd9c084e14c8b08
         }
 
         result = UrlRefDTO.fromEntity(entity);
