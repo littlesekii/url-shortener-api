@@ -26,7 +26,7 @@ public class PingProcess implements CommandLineRunner {
                 }
 
                 try {
-                    Thread.sleep(1000 * 60);
+                    Thread.sleep(1000 * 60 * 14);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
