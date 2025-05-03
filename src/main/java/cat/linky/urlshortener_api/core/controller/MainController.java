@@ -1,6 +1,7 @@
 package cat.linky.urlshortener_api.core.controller;
 
 import java.net.URI;
+import java.net.http.HttpClient;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.view.RedirectView;
 
 import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
 import cat.linky.urlshortener_api.core.service.UrlRefService;
@@ -42,13 +44,17 @@ public class MainController {
     }
 
     @GetMapping("/{req}")
-    public ResponseEntity<UrlRefDTO> get(@PathVariable String req) {
-        UrlRefDTO res = service.findByUrlRef(req);
+    public RedirectView get(@PathVariable String req) {
+        UrlRefDTO data = service.findByUrlRef(req);
 
-        if (res == null) {
-            return ResponseEntity.notFound().build();
-        }
+        return new RedirectView(data.urlDest());
 
-        return ResponseEntity.ok().body(res);
+        // if (res == null) {
+        //     return ResponseEntity.notFound().build();
+        // }
+
+        // return ResponseEntity.ok().body(res);
+
+        
     }
 }
