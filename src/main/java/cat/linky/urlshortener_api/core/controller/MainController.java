@@ -17,7 +17,7 @@ import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
 import cat.linky.urlshortener_api.core.service.UrlRefService;
 
 @RestController
-@RequestMapping("/short")
+@RequestMapping("/")
 public class MainController {
 
     private UrlRefService service;
@@ -26,7 +26,9 @@ public class MainController {
         this.service = service;
     }
     
+
     @PostMapping
+    @RequestMapping("/api/short")
     public ResponseEntity<UrlRefDTO> post(@RequestBody UrlRefDTO req) {
         UrlRefDTO res;
 
