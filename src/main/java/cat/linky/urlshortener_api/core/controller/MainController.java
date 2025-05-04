@@ -17,7 +17,7 @@ import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
 import cat.linky.urlshortener_api.core.service.UrlRefService;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/")
 public class MainController {
 
     private UrlRefService service;
@@ -27,8 +27,7 @@ public class MainController {
     }
     
 
-    @PostMapping
-    @RequestMapping("/api/short")
+    @PostMapping("api/short")
     public ResponseEntity<UrlRefDTO> post(@RequestBody UrlRefDTO req) {
         UrlRefDTO res;
 
@@ -45,7 +44,7 @@ public class MainController {
         return ResponseEntity.created(uri).body(res);
     }
 
-    @GetMapping("/{req}")
+    @GetMapping("{req}")
     public RedirectView get(@PathVariable String req) {
         UrlRefDTO data = service.findByUrlRef(req);
 
@@ -59,7 +58,8 @@ public class MainController {
 
         
     }
-    @GetMapping("/")
+    
+    @GetMapping
     public RedirectView getRedirect() {
         return new RedirectView("https://shorturl.linky.cat");      
     }
