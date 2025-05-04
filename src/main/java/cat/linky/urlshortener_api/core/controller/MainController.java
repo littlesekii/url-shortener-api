@@ -17,7 +17,7 @@ import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
 import cat.linky.urlshortener_api.core.service.UrlRefService;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("")
 public class MainController {
 
     private UrlRefService service;
