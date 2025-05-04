@@ -59,4 +59,8 @@ public class MainController {
 
         
     }
+    @GetMapping("/")
+    public RedirectView getRedirect() {
+        return new RedirectView("https://shorturl.linky.cat");      
+    }
 }
