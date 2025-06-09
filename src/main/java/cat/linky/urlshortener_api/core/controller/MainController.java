@@ -1,8 +1,8 @@
 package cat.linky.urlshortener_api.core.controller;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,25 +13,27 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 
-import cat.linky.urlshortener_api.core.model.dto.UrlRefDTO;
-import cat.linky.urlshortener_api.core.service.UrlRefService;
+import cat.linky.urlshortener_api.core.model.dto.ShortUrlDTO;
+import cat.linky.urlshortener_api.core.service.ShortUrlService;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping()
 public class MainController {
 
-    private UrlRefService service;
+    @Value("${client.url}")
+    private String CLIENT_BASE_URL;
 
-    public MainController(UrlRefService service) {
+    private ShortUrlService service;
+
+    public MainController(ShortUrlService service) {
         this.service = service;
     }
     
+    @PostMapping("/api/shorten")
+    public ResponseEntity<ShortUrlDTO> post(@RequestBody ShortUrlDTO req) {
+        ShortUrlDTO res;
 
-    @PostMapping("api/short")
-    public ResponseEntity<UrlRefDTO> post(@RequestBody UrlRefDTO req) {
-        UrlRefDTO res;
-
-        if(req.urlDest() == null) {
+        if(req.targetUrl() == null) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -44,23 +46,14 @@ public class MainController {
         return ResponseEntity.created(uri).body(res);
     }
 
-    @GetMapping("{req}")
+    @GetMapping("/{req}")
     public RedirectView get(@PathVariable String req) {
-        UrlRefDTO data = service.findByUrlRef(req);
-
-        return new RedirectView(data.urlDest());
-
-        // if (res == null) {
-        //     return ResponseEntity.notFound().build();
-        // }
-
-        // return ResponseEntity.ok().body(res);
-
-        
+        ShortUrlDTO data = service.findByShortHash(req);
+        return new RedirectView(data.targetUrl());        
     }
     
-    @GetMapping
+    @GetMapping("/")
     public RedirectView getRedirect() {
-        return new RedirectView("https://shorturl.linky.cat");      
+        return new RedirectView(CLIENT_BASE_URL);      
     }
 }

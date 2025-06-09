@@ -8,26 +8,30 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "t_urlref")
-public class UrlRef {
+@Table(name = "t_short_url")
+public class ShortUrl {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "The property \"urlRef\" cannot be blank.")
-    private String urlRef;
+    @NotBlank(message = "The property \"shortHash\" cannot be blank.")
+    private String shortHash;
 
-    @NotBlank(message = "The property \"urlDest\" cannot be blank.")
-    private String urlDest;
+    @NotBlank(message = "The property \"shortUrl\" cannot be blank.")
+    private String shortUrl;
+
+    @NotBlank(message = "The property \"targetUrl\" cannot be blank.")
+    private String targetUrl;
     
-    public UrlRef() {
+    public ShortUrl() {
     }
 
-    public UrlRef(Long id, String urlRef, String urlDest) {
+    public ShortUrl(Long id, String shortHash, String shortUrl, String targetUrl) {
         this.id = id;
-        this.urlRef = urlRef;
-        this.urlDest = urlDest;
+        this.shortHash = shortHash;
+        this.shortUrl = shortUrl;
+        this.targetUrl = targetUrl;
     }
 
     public Long getId() {
@@ -38,20 +42,28 @@ public class UrlRef {
         this.id = id;
     }
 
-    public String getUrlRef() {
-        return urlRef;
+    public String getShortHash() {
+        return shortHash;
     }
 
-    public void setUrlRef(String urlRef) {
-        this.urlRef = urlRef;
+    public void setShortHash(String shortHash) {
+        this.shortHash = shortHash;
     }
 
-    public String getUrlDest() {
-        return urlDest;
+    public String getShortUrl() {
+        return shortUrl;
     }
 
-    public void setUrlDest(String urlDest) {
-        this.urlDest = urlDest;
+    public void setShortUrl(String shortUrl) {
+        this.shortUrl = shortUrl;
+    }
+
+    public String getTargetUrl() {
+        return targetUrl;
+    }
+
+    public void setTargetUrl(String targetUrl) {
+        this.targetUrl = targetUrl;
     }
 
     @Override
@@ -70,7 +82,7 @@ public class UrlRef {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        UrlRef other = (UrlRef) obj;
+        ShortUrl other = (ShortUrl) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
