@@ -14,6 +14,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 
 import cat.linky.urlshortener_api.core.model.dto.ShortUrlDTO;
+import cat.linky.urlshortener_api.core.model.dto.ShortUrlReCaptchaTokenDTO;
+import cat.linky.urlshortener_api.core.service.ReCaptchaService;
 import cat.linky.urlshortener_api.core.service.ShortUrlService;
 
 @RestController
@@ -24,20 +26,31 @@ public class MainController {
     private String CLIENT_BASE_URL;
 
     private ShortUrlService service;
+    private ReCaptchaService reCaptchaService;
 
-    public MainController(ShortUrlService service) {
+    public MainController(ShortUrlService service, ReCaptchaService reCaptchaService) {
         this.service = service;
+        this.reCaptchaService = reCaptchaService;
     }
     
     @PostMapping("/api/shorten")
-    public ResponseEntity<ShortUrlDTO> post(@RequestBody ShortUrlDTO req) {
+    public ResponseEntity<ShortUrlDTO> post(@RequestBody ShortUrlReCaptchaTokenDTO req) {
         ShortUrlDTO res;
+
+        if (!reCaptchaService.verify(req.recaptchaToken())) {
+            return ResponseEntity.badRequest().build();
+        }
 
         if(req.targetUrl() == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        res = service.create(req);
+        res = service.create(new ShortUrlDTO(
+            null, 
+            "", 
+            "", 
+            req.targetUrl()
+        ));
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
             .buildAndExpand(res.id())

@@ -5,6 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import cat.linky.urlshortener_api.core.client.ApiClient;
+
 @SuppressWarnings("all")
 @Component
 public class PingProcess implements CommandLineRunner {
