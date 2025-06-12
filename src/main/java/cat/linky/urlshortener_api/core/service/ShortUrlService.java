@@ -43,12 +43,10 @@ public class ShortUrlService {
 
     public ShortUrlDTO findByShortHash(String shortHash) {
         return findEntityOrDefault(repository.findByShortHash(shortHash));
-       
     }
 
     public ShortUrlDTO findByShortUrl(String shortUrl) {
         return findEntityOrDefault(repository.findByShortUrl(shortUrl));
-        
     }
 
     private ShortUrlDTO findEntityOrDefault(ShortUrl entity) {
@@ -58,6 +56,21 @@ public class ShortUrlService {
 
         ShortUrlDTO result = ShortUrlDTO.fromEntity(entity);
         return result;
+    }
+
+    public String normalizeTargetUrl(String targetUrl) {
+        if ((targetUrl == null || targetUrl.trim().isEmpty())) 
+            return null;
+        
+        targetUrl = targetUrl.trim().toLowerCase();
+
+        if ((!Utils.startsWithAlphanumeric(targetUrl)) || (!targetUrl.contains(".")))
+            return null;
+
+        if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://"))
+            return "https://" + targetUrl;
+
+        return targetUrl;
     }
 
     private String createDynamicUrl(String baseUrl) {

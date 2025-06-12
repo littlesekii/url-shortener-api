@@ -38,7 +38,6 @@ public class MainController {
     public ResponseEntity<ShortUrlDTO> post(@RequestBody ShortUrlReCaptchaTokenDTO req, HttpServletRequest reqInfo) {
         ShortUrlDTO res;
 
-        
         System.out.println(reqInfo.getRemoteAddr());
         System.out.println(reqInfo.getHeader("X-FORWARDED-FOR"));
 
@@ -46,7 +45,8 @@ public class MainController {
             return ResponseEntity.badRequest().build();
         }
 
-        if(req.targetUrl() == null) {
+        String targetUrl = service.normalizeTargetUrl(req.targetUrl());
+        if(targetUrl == null) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -54,7 +54,7 @@ public class MainController {
             null, 
             "", 
             "", 
-            req.targetUrl()
+            targetUrl
         ));
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")

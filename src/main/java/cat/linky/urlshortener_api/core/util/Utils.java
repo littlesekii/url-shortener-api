@@ -8,4 +8,8 @@ public class Utils {
         number += startRange;
         return number;
     }
+
+    public static boolean startsWithAlphanumeric(String str) {
+        return Character.isLetterOrDigit(str.charAt(0));
+    }
 }
