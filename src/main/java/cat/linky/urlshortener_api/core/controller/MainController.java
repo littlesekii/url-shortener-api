@@ -17,6 +17,7 @@ import cat.linky.urlshortener_api.core.model.dto.ShortUrlDTO;
 import cat.linky.urlshortener_api.core.model.dto.ShortUrlReCaptchaTokenDTO;
 import cat.linky.urlshortener_api.core.service.ReCaptchaService;
 import cat.linky.urlshortener_api.core.service.ShortUrlService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping()
@@ -34,8 +35,12 @@ public class MainController {
     }
     
     @PostMapping("/api/shorten")
-    public ResponseEntity<ShortUrlDTO> post(@RequestBody ShortUrlReCaptchaTokenDTO req) {
+    public ResponseEntity<ShortUrlDTO> post(@RequestBody ShortUrlReCaptchaTokenDTO req, HttpServletRequest reqInfo) {
         ShortUrlDTO res;
+
+        
+        System.out.println(reqInfo.getRemoteAddr());
+        System.out.println(reqInfo.getHeader("X-FORWARDED-FOR"));
 
         if (!reCaptchaService.verify(req.recaptchaToken())) {
             return ResponseEntity.badRequest().build();

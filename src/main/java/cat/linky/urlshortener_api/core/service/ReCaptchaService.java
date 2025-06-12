@@ -28,6 +28,7 @@ public class ReCaptchaService {
 
         ReCaptchaDTO res = reCaptchaClient.post(formData);
 
+        System.out.println(res);
         if (!res.success() || res.score() < 0.5) {
             return false;
         }
