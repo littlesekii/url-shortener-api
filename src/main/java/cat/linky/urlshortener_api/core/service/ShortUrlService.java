@@ -62,7 +62,7 @@ public class ShortUrlService {
         if ((targetUrl == null || targetUrl.trim().isEmpty())) 
             return null;
         
-        targetUrl = targetUrl.trim().toLowerCase();
+        targetUrl = targetUrl.trim();
 
         if ((!Utils.startsWithAlphanumeric(targetUrl)) || (!targetUrl.contains(".")))
             return null;
