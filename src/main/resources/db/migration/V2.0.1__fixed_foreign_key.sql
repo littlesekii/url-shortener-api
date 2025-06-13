@@ -1,1 +1,0 @@
-ALTER TABLE t_short_url_interaction MODIFY COLUMN id_short_url bigint;
