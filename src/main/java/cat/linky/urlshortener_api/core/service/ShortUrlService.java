@@ -18,9 +18,11 @@ public class ShortUrlService {
     private String CLIENT_BASE_URL;
 
     private IShortUrlRepository repository;
+    private ShortUrlInteractionService interactionService;
 
-    public ShortUrlService(IShortUrlRepository repository) {
+    public ShortUrlService(IShortUrlRepository repository, ShortUrlInteractionService interactionService) {
         this.repository = repository;
+        this.interactionService = interactionService;
     }
 
     public ShortUrlDTO create(ShortUrlDTO data) {
@@ -55,6 +57,9 @@ public class ShortUrlService {
         }
 
         ShortUrlDTO result = ShortUrlDTO.fromEntity(entity);
+
+        //create interaction registry
+        interactionService.create(result.id());
         return result;
     }
 
