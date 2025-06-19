@@ -16,6 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import cat.linky.urlshortener_api.core.model.dto.ShortUrlDTO;
 import cat.linky.urlshortener_api.core.model.dto.ShortUrlReCaptchaTokenDTO;
 import cat.linky.urlshortener_api.core.service.ReCaptchaService;
+import cat.linky.urlshortener_api.core.service.ShortUrlInteractionService;
 import cat.linky.urlshortener_api.core.service.ShortUrlService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -27,10 +28,16 @@ public class MainController {
     private String CLIENT_BASE_URL;
 
     private ShortUrlService service;
+    private ShortUrlInteractionService interactionService;
     private ReCaptchaService reCaptchaService;
 
-    public MainController(ShortUrlService service, ReCaptchaService reCaptchaService) {
+    public MainController(
+        ShortUrlService service, 
+        ShortUrlInteractionService interactionService,
+        ReCaptchaService reCaptchaService
+    ) {
         this.service = service;
+        this.interactionService = interactionService;
         this.reCaptchaService = reCaptchaService;
     }
     
@@ -64,9 +71,23 @@ public class MainController {
         return ResponseEntity.created(uri).body(res);
     }
 
+    @GetMapping("/api/shorturl/{req}")
+    public ResponseEntity<ShortUrlDTO> get(@PathVariable String req) {
+        ShortUrlDTO res = service.findByShortHash(req);
+
+        if (res.id() == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok().body(res);       
+    }
+
     @GetMapping("/{req}")
-    public RedirectView get(@PathVariable String req) {
+    public RedirectView getRedirect(@PathVariable String req) {
         ShortUrlDTO data = service.findByShortHash(req);
+
+        if (data.id() != null)
+            interactionService.create(data.id());    
+        
         return new RedirectView(data.targetUrl());        
     }
     
