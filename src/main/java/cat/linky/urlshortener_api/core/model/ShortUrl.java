@@ -1,5 +1,7 @@
 package cat.linky.urlshortener_api.core.model;
 
+import java.time.Instant;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,15 +25,18 @@ public class ShortUrl {
 
     @NotBlank(message = "The property \"targetUrl\" cannot be blank.")
     private String targetUrl;
+
+    private Instant createdAt;
     
     public ShortUrl() {
     }
 
-    public ShortUrl(Long id, String shortHash, String shortUrl, String targetUrl) {
+    public ShortUrl(Long id, String shortHash, String shortUrl, String targetUrl, Instant createdAt) {
         this.id = id;
         this.shortHash = shortHash;
         this.shortUrl = shortUrl;
         this.targetUrl = targetUrl;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -64,6 +69,14 @@ public class ShortUrl {
 
     public void setTargetUrl(String targetUrl) {
         this.targetUrl = targetUrl;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package cat.linky.urlshortener_api.core.service;
 
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,7 @@ public class ShortUrlService {
         var entity = data.toEntity();
         entity.setShortHash(shortUrl.replace(SERVER_BASE_URL, ""));
         entity.setShortUrl(shortUrl);
+        entity.setCreatedAt(Instant.now());
 
         var created = repository.save(entity);
         ShortUrlDTO result = ShortUrlDTO.fromEntity(created);
@@ -51,7 +54,7 @@ public class ShortUrlService {
 
     private ShortUrlDTO findEntityOrDefault(ShortUrl entity) {
         if (entity == null) {
-            return new ShortUrlDTO(null, "", "", CLIENT_BASE_URL);
+            return new ShortUrlDTO(null, "", "", CLIENT_BASE_URL, null);
         }
 
         ShortUrlDTO result = ShortUrlDTO.fromEntity(entity);

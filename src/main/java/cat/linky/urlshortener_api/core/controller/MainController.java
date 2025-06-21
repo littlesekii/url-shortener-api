@@ -61,7 +61,8 @@ public class MainController {
             null, 
             "", 
             "", 
-            targetUrl
+            targetUrl,
+            null
         ));
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
