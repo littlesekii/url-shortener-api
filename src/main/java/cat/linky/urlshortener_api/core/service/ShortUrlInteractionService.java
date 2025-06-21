@@ -1,12 +1,17 @@
 package cat.linky.urlshortener_api.core.service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import cat.linky.urlshortener_api.core.model.ShortUrlInteraction;
+import cat.linky.urlshortener_api.core.model.dto.ChartViewDayDTO;
 import cat.linky.urlshortener_api.core.model.dto.ShortUrlInteractionDTO;
 import cat.linky.urlshortener_api.core.repository.IShortUrlInteractionRepository;
 
@@ -35,6 +40,30 @@ public class ShortUrlInteractionService {
         ).collect(Collectors.toList());        
 
         return result;
+    }
+
+    public ChartViewDayDTO chartViewDay(Long idShortUrl, LocalDate day) {
+        List<String> label = new ArrayList<>();
+        List<String> value = new ArrayList<>();
+
+        List<ShortUrlInteraction> data = repository.findAllByIdShortUrl(idShortUrl);
+
+        for (int i = 0; i < 24; i++) {
+            final int hour = i;
+            label.add(LocalTime.of(hour, 0).toString());
+            value.add(String.valueOf(data.stream()
+                .filter(item -> item.getMoment()
+                    .atZone(ZoneId.of("America/Sao_Paulo"))
+                    .toLocalTime()
+                    .isAfter(LocalTime.of(hour, 0)))
+                .filter(item -> item.getMoment()
+                    .atZone(ZoneId.of("America/Sao_Paulo"))
+                    .toLocalTime()
+                    .isBefore(LocalTime.of(hour, 59, 59)))
+                .count() 
+            ));
+        }
+        return new ChartViewDayDTO(label, value);
     }
 
 }
