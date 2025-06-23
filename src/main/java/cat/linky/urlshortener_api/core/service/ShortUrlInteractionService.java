@@ -42,22 +42,26 @@ public class ShortUrlInteractionService {
         return result;
     }
 
-    public ChartViewDayDTO chartViewDay(Long idShortUrl, LocalDate day) {
+    public ChartViewDayDTO chartViewDay(Long idShortUrl, LocalDate day, String zone) {
         List<String> label = new ArrayList<>();
         List<String> value = new ArrayList<>();
 
-        List<ShortUrlInteraction> data = repository.findAllByIdShortUrl(idShortUrl);
+        List<ShortUrlInteraction> data = repository.findAllByIdShortUrlAndMomentBetween(
+            idShortUrl, 
+            day.atStartOfDay(ZoneId.of(zone)).toInstant(), 
+            day.plusDays(1).atStartOfDay(ZoneId.of(zone)).toInstant()
+        );
 
         for (int i = 0; i < 24; i++) {
             final int hour = i;
             label.add(LocalTime.of(hour, 0).toString());
             value.add(String.valueOf(data.stream()
                 .filter(item -> item.getMoment()
-                    .atZone(ZoneId.of("America/Sao_Paulo"))
+                    .atZone(ZoneId.of(zone))
                     .toLocalTime()
                     .isAfter(LocalTime.of(hour, 0)))
                 .filter(item -> item.getMoment()
-                    .atZone(ZoneId.of("America/Sao_Paulo"))
+                    .atZone(ZoneId.of(zone))
                     .toLocalTime()
                     .isBefore(LocalTime.of(hour, 59, 59)))
                 .count() 

@@ -32,8 +32,8 @@ public class ShortUrlInteractionController {
     }
 
     @GetMapping("/chart/day/{req}")
-    public ResponseEntity<ChartViewDayDTO> getChartDayView(@PathVariable Long req, @RequestParam LocalDate day) {
-        ChartViewDayDTO res = service.chartViewDay(req, day);
+    public ResponseEntity<ChartViewDayDTO> getChartDayView(@PathVariable Long req, @RequestParam LocalDate day, @RequestParam String zone) {
+        ChartViewDayDTO res = service.chartViewDay(req, day, zone);
         return ResponseEntity.ok().body(res);
     }
     
